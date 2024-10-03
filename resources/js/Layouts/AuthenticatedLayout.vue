@@ -4,11 +4,32 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
-import { ref } from 'vue';
-
+import { Link, usePage } from '@inertiajs/vue3';
+import { ref, onMounted } from 'vue';
+import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
 
 const showingNavigationDropdown = ref(false);
+
+const page = usePage(); // Get the current page data
+
+// State to manage whether the back arrow should be shown
+const showBackArrow = ref(false);
+
+// Function to go back to the previous page
+const goBack = () => {
+  window.history.back();
+};
+
+// Function to reset history when on the dashboard and check navigation history
+onMounted(() => {
+  if (page.url === '/dashboard') {
+    // Replace the current state in history to prevent going back further
+    window.history.replaceState(null, '', window.location.href);
+  }
+
+  // Show the back arrow only if there is more than 1 history entry
+  showBackArrow.value = window.history.length > 1;
+});
 </script>
 
 <template>
@@ -32,6 +53,11 @@ const showingNavigationDropdown = ref(false);
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :active="route().current('dashboard')" :href="route('dashboard')">
                                     Dashboard
+                                </NavLink>
+                            </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink :active="route().current('prompts.list')" :href="route('prompts.list')">
+                                    Prompts
                                 </NavLink>
                             </div>
                         </div>
@@ -139,7 +165,10 @@ const showingNavigationDropdown = ref(false);
 
             <!-- Page Heading -->
             <header v-if="$slots.header" class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <div class="flex gap-4 max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    <button v-if="showBackArrow" @click="goBack" class="text-gray-600 hover:text-gray-800">
+                        <ArrowLeftIcon class="h-6 w-6" />
+                    </button>
                     <slot name="header" />
                 </div>
             </header>

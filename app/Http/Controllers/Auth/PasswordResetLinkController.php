@@ -17,9 +17,11 @@ class PasswordResetLinkController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/ForgotPassword', [
+        return Inertia::render(
+            'Auth/ForgotPassword', [
             'status' => session('status'),
-        ]);
+            ]
+        );
     }
 
     /**
@@ -29,9 +31,11 @@ class PasswordResetLinkController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $request->validate(
+            [
             'email' => 'required|email',
-        ]);
+            ]
+        );
 
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
@@ -44,8 +48,10 @@ class PasswordResetLinkController extends Controller
             return back()->with('status', __($status));
         }
 
-        throw ValidationException::withMessages([
+        throw ValidationException::withMessages(
+            [
             'email' => [trans($status)],
-        ]);
+            ]
+        );
     }
 }

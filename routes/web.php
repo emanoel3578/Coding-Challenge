@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\ProcessPromptController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PromptController;
+use App\Http\Controllers\StorePromptController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,6 +25,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::prefix('prompts')->middleware('auth')->group(function () {
+    Route::get('/', [PromptController::class, 'list'])->name('prompts.list');
+    Route::get('conversation/{id?}', [PromptController::class, 'show'])->name('prompts.show');
+    Route::post('store', [StorePromptController::class, 'store'])->name('prompts.store');
+    Route::post('process', [ProcessPromptController::class, 'process'])->name('prompts.process');
 });
 
 require __DIR__ . '/auth.php';

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
 
 //use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -29,5 +30,7 @@ class DatabaseSeeder extends Seeder
             'email'    => 'dan@prompthub.us',
             'password' => Hash::make('password'),
         ]);
+
+        App::make(BaseAiPromptsConfigurationSeeder::class)->run();
     }
 }
